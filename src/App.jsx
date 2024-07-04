@@ -1,10 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
+import AdmissionDetails from './assets/components/AdmissionDetails';
 
 function App() {
   const { user, loginWithRedirect, isAuthenticated, logout } = useAuth0();
+  const navigate = useNavigate();
 
-  console.log('current user', user);
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/admission-details');
+    }
+  }, [isAuthenticated, navigate]);
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
@@ -22,7 +29,7 @@ function App() {
             onClick={() => loginWithRedirect()}
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           >
-            Login with Redirect
+           Counselor Login
           </button>
         )}
       </div>
@@ -30,5 +37,15 @@ function App() {
   );
 }
 
-export default App;
+function MainApp() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<App />} />
+        <Route path="/admission-details" element={<AdmissionDetails />} />
+      </Routes>
+    </Router>
+  );
+}
 
+export default MainApp;
